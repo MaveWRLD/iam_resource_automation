@@ -58,6 +58,49 @@ Resources:
                   - ec2:RunInstances
                 Resource: '*'
 
+
+  EC2User1:
+    Type: AWS::IAM::User
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties:
+      UserName: ec2-user1
+      Groups:
+        - !Ref EC2UserGroup
+      LoginProfile:
+        Password: !Sub
+          - '{{resolve:secretsmanager:${SecretId}:SecretString:password}}'
+          - SecretId: !Ref IamOtpSecret
+        PasswordResetRequired: true
+
+  EC2User2:
+    Type: AWS::IAM::User
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties:
+      UserName: ec2-user2
+      Groups:
+        - !Ref EC2UserGroup
+      LoginProfile:
+        Password: !Sub
+          - '{{resolve:secretsmanager:${SecretId}:SecretString:password}}'
+          - SecretId: !Ref IamOtpSecret
+        PasswordResetRequired: true
+
+  S3User:
+    Type: AWS::IAM::User
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties:
+      UserName: s3-user
+      Groups:
+        - !Ref S3UserGroup
+      LoginProfile:
+        Password: !Sub
+          - '{{resolve:secretsmanager:${SecretId}:SecretString:password}}'
+          - SecretId: !Ref IamOtpSecret
+        PasswordResetRequired: true
+
 Outputs:
   IamOtpSecretArn:
     Description: ARN of the OTP secret
@@ -76,3 +119,21 @@ Outputs:
     Value: !Ref EC2UserGroup
     Export:
       Name: !Sub "${AWS::StackName}-EC2UserGroupName"
+
+  EC2User1Name:
+    Description: EC2 User 1 username
+    Value: !Ref EC2User1
+    Export:
+      Name: !Sub "${AWS::StackName}-EC2User1Name"
+
+  EC2User2Name:
+    Description: EC2 User 2 username
+    Value: !Ref EC2User2
+    Export:
+      Name: !Sub "${AWS::StackName}-EC2User2Name"
+
+  S3UserName:
+    Description: S3 User username
+    Value: !Ref S3User
+    Export:
+      Name: !Sub "${AWS::StackName}-S3UserName"
