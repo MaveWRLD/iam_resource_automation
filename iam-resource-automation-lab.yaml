@@ -58,7 +58,6 @@ Resources:
                   - ec2:RunInstances
                 Resource: '*'
 
-  # ── IAM Users ──────────────────────────────────────────────
 
   EC2User1:
     Type: AWS::IAM::User
@@ -69,11 +68,9 @@ Resources:
       Groups:
         - !Ref EC2UserGroup
       LoginProfile:
-        Password: !Join
-          - ''
-          - - '{{resolve:secretsmanager:'
-            - !Ref IamOtpSecret
-            - ':SecretString:password}}'
+        Password: !Sub
+          - '{{resolve:secretsmanager:${SecretId}:SecretString:password}}'
+          - SecretId: !Ref IamOtpSecret
         PasswordResetRequired: true
 
   EC2User2:
@@ -85,11 +82,9 @@ Resources:
       Groups:
         - !Ref EC2UserGroup
       LoginProfile:
-        Password: !Join
-          - ''
-          - - '{{resolve:secretsmanager:'
-            - !Ref IamOtpSecret
-            - ':SecretString:password}}'
+        Password: !Sub
+          - '{{resolve:secretsmanager:${SecretId}:SecretString:password}}'
+          - SecretId: !Ref IamOtpSecret
         PasswordResetRequired: true
 
   S3User:
@@ -101,11 +96,9 @@ Resources:
       Groups:
         - !Ref S3UserGroup
       LoginProfile:
-        Password: !Join
-          - ''
-          - - '{{resolve:secretsmanager:'
-            - !Ref IamOtpSecret
-            - ':SecretString:password}}'
+        Password: !Sub
+          - '{{resolve:secretsmanager:${SecretId}:SecretString:password}}'
+          - SecretId: !Ref IamOtpSecret
         PasswordResetRequired: true
 
 Outputs:
