@@ -34,6 +34,30 @@ Resources:
                   - s3:ListAllMyBuckets
                 Resource: '*'
 
+  EC2UserGroup:
+    Type: AWS::IAM::Group
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties:
+      GroupName: ec2-list-create-group
+      Policies:
+        - PolicyName: EC2ListCreatePolicy
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Sid: AllowListEC2Instances
+                Effect: Allow
+                Action:
+                  - ec2:DescribeInstances
+                  - ec2:DescribeInstanceStatus
+                  - ec2:DescribeInstanceTypes
+                Resource: '*'
+              - Sid: AllowCreateEC2Instances
+                Effect: Allow
+                Action:
+                  - ec2:RunInstances
+                Resource: '*'
+
 Outputs:
   IamOtpSecretArn:
     Description: ARN of the OTP secret
@@ -46,3 +70,9 @@ Outputs:
     Value: !Ref S3UserGroup
     Export:
       Name: !Sub "${AWS::StackName}-S3UserGroupName"
+
+  EC2UserGroupName:
+    Description: Name of the EC2 user group
+    Value: !Ref EC2UserGroup
+    Export:
+      Name: !Sub "${AWS::StackName}-EC2UserGroupName"
