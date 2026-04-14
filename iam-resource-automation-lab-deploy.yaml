@@ -1,0 +1,23 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: IAM Resource Automation Lab
+
+Resources:
+
+  IamOtpSecret:
+    Type: AWS::SecretsManager::Secret
+    Properties:
+      Name: iam-lab-otp-secret
+      Description: One Time Password for IAM users in lab
+      GenerateSecretString:
+        SecretStringTemplate: '{"purpose": "iam-lab"}'
+        GenerateStringKey: password
+        PasswordLength: 12
+        ExcludeCharacters: '"@/\'''
+        RequireEachIncludedType: true
+
+Outputs:
+  IamOtpSecretArn:
+    Description: ARN of the OTP secret
+    Value: !Ref IamOtpSecret
+    Export:
+      Name: !Sub "${AWS::StackName}-OtpSecretArn"
