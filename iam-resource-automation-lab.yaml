@@ -5,6 +5,8 @@ Resources:
 
   IamOtpSecret:
     Type: AWS::SecretsManager::Secret
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
     Properties:
       Name: iam-lab-otp-secret
       Description: One Time Password for IAM users in lab
@@ -15,9 +17,32 @@ Resources:
         ExcludeCharacters: '"@/\'''
         RequireEachIncludedType: true
 
+  S3UserGroup:
+    Type: AWS::IAM::Group
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties:
+      GroupName: s3-list-buckets-group
+      Policies:
+        - PolicyName: S3ListBucketsPolicy
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Sid: AllowListAllBuckets
+                Effect: Allow
+                Action:
+                  - s3:ListAllMyBuckets
+                Resource: '*'
+
 Outputs:
   IamOtpSecretArn:
     Description: ARN of the OTP secret
     Value: !Ref IamOtpSecret
     Export:
       Name: !Sub "${AWS::StackName}-OtpSecretArn"
+
+  S3UserGroupName:
+    Description: Name of the S3 user group
+    Value: !Ref S3UserGroup
+    Export:
+      Name: !Sub "${AWS::StackName}-S3UserGroupName"
