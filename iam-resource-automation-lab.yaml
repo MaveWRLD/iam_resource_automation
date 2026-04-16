@@ -148,19 +148,19 @@ Resources:
           - SecretId: !Ref IamOtpSecret
         PasswordResetRequired: true
 
-  S3User:
-    Type: AWS::IAM::User
-    DeletionPolicy: Delete
-    UpdateReplacePolicy: Delete
-    Properties:
-      UserName: s3-user
-      Groups:
-        - !Ref S3UserGroup
-      LoginProfile:
-        Password: !Sub
-          - '{{resolve:secretsmanager:${SecretId}:SecretString:password}}'
-          - SecretId: !Ref IamOtpSecret
-        PasswordResetRequired: true
+  # S3User:
+  #   Type: AWS::IAM::User
+  #   DeletionPolicy: Delete
+  #   UpdateReplacePolicy: Delete
+  #   Properties:
+  #     UserName: s3-user
+  #     Groups:
+  #       - !Ref S3UserGroup
+  #     LoginProfile:
+  #       Password: !Sub
+  #         - '{{resolve:secretsmanager:${SecretId}:SecretString:password}}'
+  #         - SecretId: !Ref IamOtpSecret
+  #       PasswordResetRequired: true
 
 Outputs:
   IamOtpSecretArn:
