@@ -17,12 +17,30 @@ Resources:
         ExcludeCharacters: '"@/\'''
         RequireEachIncludedType: true
 
+  ChangePasswordPolicy:
+    Type: AWS::IAM::ManagedPolicy
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties:
+      ManagedPolicyName: allow-change-own-password
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Sid: AllowChangeOwnPassword
+            Effect: Allow
+            Action:
+              - iam:ChangePassword
+              - iam:GetAccountPasswordPolicy
+            Resource: '*'
+
   S3UserGroup:
     Type: AWS::IAM::Group
     DeletionPolicy: Delete
     UpdateReplacePolicy: Delete
     Properties:
       GroupName: s3-list-buckets-group
+      ManagedPolicyArns:
+        - !Ref ChangePasswordPolicy
       Policies:
         - PolicyName: S3ListBucketsPolicy
           PolicyDocument:
@@ -40,6 +58,8 @@ Resources:
     UpdateReplacePolicy: Delete
     Properties:
       GroupName: ec2-list-create-group
+      ManagedPolicyArns:
+        - !Ref ChangePasswordPolicy
       Policies:
         - PolicyName: EC2ListCreatePolicy
           PolicyDocument:
@@ -58,8 +78,6 @@ Resources:
                   - ec2:RunInstances
                 Resource: '*'
 
-          
-
   EC2ListOnlyBoundary:
     Type: AWS::IAM::ManagedPolicy
     DeletionPolicy: Delete
@@ -75,6 +93,12 @@ Resources:
               - ec2:DescribeInstances
               - ec2:DescribeInstanceStatus
               - ec2:DescribeInstanceTypes
+            Resource: '*'
+          - Sid: AllowChangePassword
+            Effect: Allow
+            Action:
+              - iam:ChangePassword
+              - iam:GetAccountPasswordPolicy
             Resource: '*'
 
   EC2User1:
