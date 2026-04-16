@@ -193,8 +193,8 @@ Outputs:
     Export:
       Name: !Sub "${AWS::StackName}-EC2User2Name"
 
-  S3UserName:
-    Description: S3 User username
-    Value: !Ref S3User
-    Export:
-      Name: !Sub "${AWS::StackName}-S3UserName"
+  # S3UserName:
+  #   Description: S3 User username
+  #   Value: !Ref S3User
+  #   Export:
+  #     Name: !Sub "${AWS::StackName}-S3UserName"
